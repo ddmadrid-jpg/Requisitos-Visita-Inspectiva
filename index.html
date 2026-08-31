@@ -71,7 +71,7 @@
 </head>
 <body>
 
-    <div class="top-banner">Base Actualizada - Estándares Ruta Preventiva</div>
+    <div class="top-banner">Base Actualizada - Estándares Visita Inspectiva</div>
 
     <header>
         <h1>Instalación de Activos</h1>
@@ -148,6 +148,7 @@
                 if (!filas[i].trim()) continue;
                 const cols = filas[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/^"|"$/g, '').trim());
                 
+                // Buscamos el estado en la columna 10 (K)
                 if (cols.length >= 11 && cols[10].toLowerCase() === "activo") {
                     bdEquipos.push({
                         cat: cols[0], 
@@ -231,7 +232,7 @@
                     <div class="manual-info">
                         <span class="tag-subcat">${equipo.cat} > ${equipo.subcat}</span>
                         <h2>${equipo.modelo}</h2>
-                        <p>Asegure el cumplimiento de los siguientes parámetros durante la ruta preventiva.</p>
+                        <p>Asegure el cumplimiento de los siguientes parámetros durante la visita inspectiva.</p>
                     </div>
                 </div>
                 <table class="specs-table">
