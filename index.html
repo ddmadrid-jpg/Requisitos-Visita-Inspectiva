@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estándares de Instalación - CCU</title>
+    <style>
+        /* Paleta de Colores CCU */
+        :root {
+            --ccu-green: #0E6B26;
+            --ccu-light-green: #1B8A38;
+            --ccu-bg: #F4F7F6;
+            --ccu-text: #333333;
+        }
+
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: var(--ccu-bg); margin: 0; padding: 0; color: var(--ccu-text); }
+        
+        .top-banner { background-color: var(--ccu-green); color: #fff; text-align: center; padding: 10px; font-size: 0.85rem; font-weight: bold; letter-spacing: 1px; text-transform: uppercase; }
+        
+        header { background-color: #fff; padding: 1.5rem; text-align: center; border-bottom: 4px solid var(--ccu-light-green); box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        header h1 { margin: 0; font-size: 2rem; color: var(--ccu-green); text-transform: uppercase; }
+        header p { margin: 5px 0 0 0; color: #666; font-size: 1rem; }
+        
+        .container { max-width: 1000px; margin: auto; padding: 2rem 1rem; padding-bottom: 80px; } 
+
+        .view-section { display: none; animation: fadeIn 0.3s ease-in-out; }
+        .active-view { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .btn-back { background: none; border: none; color: var(--ccu-green); font-weight: bold; font-size: 1rem; cursor: pointer; margin-bottom: 1.5rem; padding: 0; }
+        .btn-back:hover { text-decoration: underline; color: var(--ccu-light-green); }
+
+        /* VISTA 1: Categorías */
+        .category-grid { display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-top: 2rem; }
+        .category-card { background: #fff; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); padding: 2.5rem; width: 320px; cursor: pointer; text-align: center; border-top: 6px solid var(--ccu-green); transition: transform 0.2s; }
+        .category-card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        .category-icon { font-size: 4rem; margin-bottom: 1rem; }
+        .category-title { font-size: 1.5rem; font-weight: bold; color: var(--ccu-green); }
+
+        /* VISTA 2: Listado */
+        .filtros-container { background: #fff; padding: 15px; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 20px; display: flex; gap: 15px; align-items: center; border-left: 4px solid var(--ccu-green); }
+        .filtros-container select, .filtros-container input { padding: 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 0.95rem; outline: none; width: 100%; }
+        .filtros-container select:focus, .filtros-container input:focus { border-color: var(--ccu-light-green); }
+        
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; }
+        .card { background: #fff; padding: 1.2rem; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); text-align: center; border: 1px solid #eee; display: flex; flex-direction: column; }
+        .card:hover { box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        .card img { width: 100%; height: 200px; object-fit: contain; margin-bottom: 10px; border-radius: 4px; }
+        .card h3 { font-size: 1.2rem; color: var(--ccu-green); margin: 10px 0 5px 0; }
+        .tag-subcat { display: inline-block; background-color: var(--ccu-bg); color: var(--ccu-text); padding: 4px 10px; border-radius: 4px; font-size: 0.8rem; font-weight: bold; margin-bottom: 10px; border: 1px solid #ddd; }
+        .btn-ver { background-color: var(--ccu-green); color: #fff; border: none; padding: 12px; width: 100%; cursor: pointer; border-radius: 4px; font-weight: bold; margin-top: auto; transition: 0.2s; }
+        .btn-ver:hover { background-color: var(--ccu-light-green); }
+
+        /* VISTA 3: Manual */
+        .manual-container { background: #fff; padding: 2rem; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.08); border-top: 6px solid var(--ccu-green); text-align: left; }
+        .manual-header { display: flex; gap: 2rem; margin-bottom: 2rem; align-items: center; border-bottom: 2px solid #eee; padding-bottom: 1.5rem; }
+        .manual-header img { width: 250px; height: 250px; object-fit: contain; border: 1px solid #eee; border-radius: 8px; padding: 10px; }
+        .manual-info h2 { color: var(--ccu-green); font-size: 1.8rem; margin: 0 0 10px 0; }
+        
+        .specs-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+        .specs-table th, .specs-table td { padding: 12px; border-bottom: 1px solid #ddd; text-align: left; }
+        .specs-table th { background-color: var(--ccu-bg); color: var(--ccu-green); width: 35%; }
+
+        .loader { text-align: center; padding: 3rem; color: #666; font-style: italic; }
+
+        @media (max-width: 768px) {
+            .manual-header { flex-direction: column; text-align: center; }
+            .filtros-container { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="top-banner">Base Actualizada - Estándares Ruta Preventiva</div>
+
+    <header>
+        <h1>Instalación de Activos</h1>
+        <p>Documentación técnica oficial</p>
+    </header>
+
+    <div class="container">
+        
+        <!-- VISTA 1: SELECCIÓN -->
+        <div id="vista-categorias" class="view-section active-view">
+            <h2 style="text-align: center; color: var(--ccu-text);">¿Qué equipo vas a instalar?</h2>
+            <div id="estado-carga" class="loader">Conectando con la base de datos de Google Sheets...</div>
+            
+            <div class="category-grid" id="grid-categorias" style="display: none;">
+                <div class="category-card" onclick="abrirCategoria('Schop')">
+                    <div class="category-icon">🍺</div>
+                    <div class="category-title">SCHOP</div>
+                </div>
+                <div class="category-card" onclick="abrirCategoria('Post Mix')">
+                    <div class="category-icon">🥤</div>
+                    <div class="category-title">POST MIX</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VISTA 2: LISTADO -->
+        <div id="vista-listado" class="view-section">
+            <button class="btn-back" onclick="volverACategorias()">⬅ Volver a Categorías</button>
+            <h2 id="titulo-listado">Equipos Disponibles</h2>
+            
+            <div class="filtros-container">
+                <input type="text" id="buscador" placeholder="🔍 Buscar por modelo..." onkeyup="renderizarListado()">
+                <select id="filtro-subcat" onchange="renderizarListado()">
+                    <option value="todos">Todas las salidas/tipos</option>
+                </select>
+            </div>
+
+            <div class="product-grid" id="grid-productos"></div>
+        </div>
+
+        <!-- VISTA 3: MANUAL -->
+        <div id="vista-manual" class="view-section">
+            <button class="btn-back" onclick="volverAListado()">⬅ Volver a los modelos</button>
+            
+            <div class="manual-container" id="contenido-manual">
+                <!-- Generado dinámicamente -->
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // URL de tu Google Sheets (Drive)
+        const urlGoogleSheetsCSV = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTZTuSd_MbcCw33g2sFQkTyQHR_o7VvGt35SsVzF2NVsan6a1oQkPRsTqIo86qsBpDw1sZghyi9RkFk/pub?output=csv"; 
+        
+        let bdEquipos = [];
+        let categoriaActual = "";
+
+        window.onload = async () => {
+            try {
+                const response = await fetch(urlGoogleSheetsCSV);
+                const csvText = await response.text();
+                procesarCSV(csvText);
+            } catch (error) {
+                document.getElementById('estado-carga').innerText = "Error cargando la base de datos.";
+                console.error("Error:", error);
+            }
+        };
+
+        function procesarCSV(textoCSV) {
+            const filas = textoCSV.split('\n');
+            bdEquipos = [];
+            for (let i = 1; i < filas.length; i++) {
+                if (!filas[i].trim()) continue;
+                const cols = filas[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/^"|"$/g, '').trim());
+                
+                if (cols.length >= 9 && cols[9].toLowerCase() === "activo") {
+                    bdEquipos.push({
+                        cat: cols[0], subcat: cols[1], modelo: cols[2], dim: cols[3], 
+                        peso: cols[4], elec: cols[5], hielo: cols[6], conx: cols[7], 
+                        img: cols[8] || 'https://via.placeholder.com/300/0e6b26/fff?text=Sin+Imagen'
+                    });
+                }
+            }
+            document.getElementById('estado-carga').style.display = 'none';
+            document.getElementById('grid-categorias').style.display = 'flex';
+        }
+
+        function cambiarVista(vistaId) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active-view'));
+            document.getElementById(vistaId).classList.add('active-view');
+        }
+
+        function abrirCategoria(categoria) {
+            categoriaActual = categoria;
+            document.getElementById('titulo-listado').innerText = `Equipos ${categoria}`;
+            
+            const subcats = [...new Set(bdEquipos.filter(e => e.cat === categoria).map(e => e.subcat))];
+            const selectFiltro = document.getElementById('filtro-subcat');
+            selectFiltro.innerHTML = '<option value="todos">Todas las salidas/tipos</option>';
+            subcats.forEach(sub => {
+                selectFiltro.innerHTML += `<option value="${sub}">${sub}</option>`;
+            });
+
+            document.getElementById('buscador').value = '';
+            renderizarListado();
+            cambiarVista('vista-listado');
+        }
+
+        function volverACategorias() { cambiarVista('vista-categorias'); }
+        function volverAListado() { cambiarVista('vista-listado'); }
+
+        function renderizarListado() {
+            const buscador = document.getElementById('buscador').value.toLowerCase();
+            const filtroSubcat = document.getElementById('filtro-subcat').value;
+            const grid = document.getElementById('grid-productos');
+            grid.innerHTML = '';
+
+            const filtrados = bdEquipos.filter(e => {
+                const cumpleCat = e.cat === categoriaActual;
+                const cumpleBuscador = e.modelo.toLowerCase().includes(buscador);
+                const cumpleSubcat = (filtroSubcat === "todos") || e.subcat === filtroSubcat;
+                return cumpleCat && cumpleBuscador && cumpleSubcat;
+            });
+
+            if(filtrados.length === 0) {
+                grid.innerHTML = '<p style="grid-column: 1/-1;">No se encontraron modelos con estos filtros.</p>';
+                return;
+            }
+
+            filtrados.forEach(equipo => {
+                grid.innerHTML += `
+                    <div class="card">
+                        <img src="${equipo.img}" alt="${equipo.modelo}">
+                        <span class="tag-subcat">${equipo.subcat}</span>
+                        <h3>${equipo.modelo}</h3>
+                        <button class="btn-ver" onclick="abrirManual('${equipo.modelo}')">Ver Estándar</button>
+                    </div>
+                `;
+            });
+        }
+
+        function abrirManual(modeloBuscado) {
+            const equipo = bdEquipos.find(e => e.modelo === modeloBuscado);
+            if(!equipo) return;
+
+            const html = `
+                <div class="manual-header">
+                    <img src="${equipo.img}" alt="${equipo.modelo}">
+                    <div class="manual-info">
+                        <span class="tag-subcat">${equipo.cat} > ${equipo.subcat}</span>
+                        <h2>${equipo.modelo}</h2>
+                        <p>Asegure el cumplimiento de los siguientes parámetros durante la ruta preventiva.</p>
+                    </div>
+                </div>
+                <table class="specs-table">
+                    <tbody>
+                        <tr><th>Dimensiones (An x Pr x Al)</th><td>${equipo.dim}</td></tr>
+                        <tr><th>Peso</th><td>${equipo.peso}</td></tr>
+                        <tr><th>Requisitos Eléctricos</th><td>${equipo.elec}</td></tr>
+                        <tr><th>Banco de Hielo / Cap.</th><td>${equipo.hielo}</td></tr>
+                        <tr><th>Conexiones</th><td>${equipo.conx}</td></tr>
+                    </tbody>
+                </table>
+            `;
+            document.getElementById('contenido-manual').innerHTML = html;
+            cambiarVista('vista-manual');
+        }
+    </script>
+</body>
+</html>
