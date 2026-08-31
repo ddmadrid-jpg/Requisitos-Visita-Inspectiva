@@ -136,8 +136,14 @@
                 const csvText = await response.text();
                 procesarCSV(csvText);
             } catch (error) {
-                document.getElementById('estado-carga').innerText = "Error conectando con la base de datos.";
+                document.getElementById('estado-carga').innerText = "Modo Demo: Usando datos de prueba (Error al conectar con CSV).";
                 console.error("Error:", error);
+                
+                // Fallback Demo
+                bdEquipos = [
+                    { cat: "Post Mix", subcat: "4 Salidas", modelo: "Joy 30", dim: "357 x 711 x 754 mm", peso: "50 kg", soporte: "Mínimo 100 kg.", elec: "230V / 50Hz (830 W) | Requiere Luz", hielo: "Banco Hielo 9 kg", agua: "Agua/Jarabe 3/8'' macho | Requiere Agua", img: "Joy 30.jpeg", estado: "Activo" }
+                ];
+                iniciarApp();
             }
         };
 
@@ -148,7 +154,6 @@
                 if (!filas[i].trim()) continue;
                 const cols = filas[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/^"|"$/g, '').trim());
                 
-                // Buscamos el estado en la columna 10 (K)
                 if (cols.length >= 11 && cols[10].toLowerCase() === "activo") {
                     bdEquipos.push({
                         cat: cols[0], 
@@ -159,11 +164,15 @@
                         soporte: cols[5], 
                         elec: cols[6], 
                         hielo: cols[7], 
-                        conx: cols[8], 
+                        agua: cols[8], // Actualizado para reflejar la columna "Requisitos_Agua"
                         img: cols[9] || 'https://via.placeholder.com/300/0e6b26/fff?text=Sin+Imagen' 
                     });
                 }
             }
+            iniciarApp();
+        }
+
+        function iniciarApp() {
             document.getElementById('estado-carga').style.display = 'none';
             document.getElementById('grid-categorias').style.display = 'flex';
         }
@@ -242,7 +251,7 @@
                         <tr><th>Soporte del Mesón</th><td>${equipo.soporte ? equipo.soporte : '-'}</td></tr>
                         <tr><th>Requisitos Eléctricos</th><td>${equipo.elec ? equipo.elec : '-'}</td></tr>
                         <tr><th>Banco de Hielo / Cap.</th><td>${equipo.hielo ? equipo.hielo : '-'}</td></tr>
-                        <tr><th>Conexiones</th><td>${equipo.conx ? equipo.conx : '-'}</td></tr>
+                        <tr><th>Requisitos Agua</th><td>${equipo.agua ? equipo.agua : '-'}</td></tr>
                     </tbody>
                 </table>
             `;
