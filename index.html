@@ -136,7 +136,7 @@
                 const csvText = await response.text();
                 procesarCSV(csvText);
             } catch (error) {
-                document.getElementById('estado-carga').innerText = "Error cargando la base de datos.";
+                document.getElementById('estado-carga').innerText = "Error conectando con la base de datos.";
                 console.error("Error:", error);
             }
         };
@@ -148,11 +148,18 @@
                 if (!filas[i].trim()) continue;
                 const cols = filas[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/).map(c => c.replace(/^"|"$/g, '').trim());
                 
-                if (cols.length >= 9 && cols[9].toLowerCase() === "activo") {
+                if (cols.length >= 11 && cols[10].toLowerCase() === "activo") {
                     bdEquipos.push({
-                        cat: cols[0], subcat: cols[1], modelo: cols[2], dim: cols[3], 
-                        peso: cols[4], elec: cols[5], hielo: cols[6], conx: cols[7], 
-                        img: cols[8] || 'https://via.placeholder.com/300/0e6b26/fff?text=Sin+Imagen'
+                        cat: cols[0], 
+                        subcat: cols[1], 
+                        modelo: cols[2], 
+                        dim: cols[3], 
+                        peso: cols[4], 
+                        soporte: cols[5], 
+                        elec: cols[6], 
+                        hielo: cols[7], 
+                        conx: cols[8], 
+                        img: cols[9] || 'https://via.placeholder.com/300/0e6b26/fff?text=Sin+Imagen' 
                     });
                 }
             }
@@ -205,7 +212,7 @@
             filtrados.forEach(equipo => {
                 grid.innerHTML += `
                     <div class="card">
-                        <img src="${equipo.img}" alt="${equipo.modelo}">
+                        <img src="${equipo.img}" alt="${equipo.modelo}" onerror="this.src='https://via.placeholder.com/300/0e6b26/fff?text=Imagen+No+Encontrada'">
                         <span class="tag-subcat">${equipo.subcat}</span>
                         <h3>${equipo.modelo}</h3>
                         <button class="btn-ver" onclick="abrirManual('${equipo.modelo}')">Ver Estándar</button>
@@ -220,7 +227,7 @@
 
             const html = `
                 <div class="manual-header">
-                    <img src="${equipo.img}" alt="${equipo.modelo}">
+                    <img src="${equipo.img}" alt="${equipo.modelo}" onerror="this.src='https://via.placeholder.com/300/0e6b26/fff?text=Imagen+No+Encontrada'">
                     <div class="manual-info">
                         <span class="tag-subcat">${equipo.cat} > ${equipo.subcat}</span>
                         <h2>${equipo.modelo}</h2>
@@ -229,11 +236,12 @@
                 </div>
                 <table class="specs-table">
                     <tbody>
-                        <tr><th>Dimensiones (An x Pr x Al)</th><td>${equipo.dim}</td></tr>
-                        <tr><th>Peso</th><td>${equipo.peso}</td></tr>
-                        <tr><th>Requisitos Eléctricos</th><td>${equipo.elec}</td></tr>
-                        <tr><th>Banco de Hielo / Cap.</th><td>${equipo.hielo}</td></tr>
-                        <tr><th>Conexiones</th><td>${equipo.conx}</td></tr>
+                        <tr><th>Dimensiones (An x Pr x Al)</th><td>${equipo.dim ? equipo.dim : '-'}</td></tr>
+                        <tr><th>Peso</th><td>${equipo.peso ? equipo.peso : '-'}</td></tr>
+                        <tr><th>Soporte del Mesón</th><td>${equipo.soporte ? equipo.soporte : '-'}</td></tr>
+                        <tr><th>Requisitos Eléctricos</th><td>${equipo.elec ? equipo.elec : '-'}</td></tr>
+                        <tr><th>Banco de Hielo / Cap.</th><td>${equipo.hielo ? equipo.hielo : '-'}</td></tr>
+                        <tr><th>Conexiones</th><td>${equipo.conx ? equipo.conx : '-'}</td></tr>
                     </tbody>
                 </table>
             `;
